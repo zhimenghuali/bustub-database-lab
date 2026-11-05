@@ -176,6 +176,17 @@ class BufferPoolManagerInstance : public BufferPoolManager {
     // This is a no-nop right now without a more complex data structure to track deallocated pages
   }
 
+  /**
+   * @brief Acquire a frame for a page that is about to be created or fetched. The free list is always tried
+   * before the replacer. When the frame has to be taken from the replacer, the victim page is evicted: if it is
+   * dirty its content is written back to the disk first, then its metadata is cleared and its page id is removed
+   * from the page table. The caller must hold latch_ and is responsible for filling the frame afterwards.
+   *
+   * @param[out] frame_id the frame that was acquired
+   * @return false if there is no free frame and no frame can be evicted (every frame is pinned), true otherwise
+   */
+  auto AcquireFrame(frame_id_t *frame_id) -> bool;
+
   // TODO(student): You may add additional private members and helper functions
 };
 }  // namespace bustub

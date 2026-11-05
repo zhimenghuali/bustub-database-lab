@@ -29,11 +29,6 @@ BufferPoolManagerInstance::BufferPoolManagerInstance(size_t pool_size, DiskManag
   for (size_t i = 0; i < pool_size_; ++i) {
     free_list_.emplace_back(static_cast<int>(i));
   }
-
-  // TODO(students): remove this line after you have implemented the buffer pool manager
-  throw NotImplementedException(
-      "BufferPoolManager is not implemented yet. If you have finished implementing BPM, please remove the throw "
-      "exception line in `buffer_pool_manager_instance.cpp`.");
 }
 
 BufferPoolManagerInstance::~BufferPoolManagerInstance() {
@@ -42,9 +37,100 @@ BufferPoolManagerInstance::~BufferPoolManagerInstance() {
   delete replacer_;
 }
 
-auto BufferPoolManagerInstance::NewPgImp(page_id_t *page_id) -> Page * { return nullptr; }
+auto BufferPoolManagerInstance::AcquireFrame(frame_id_t *frame_id) -> bool {
+  // A frame is always taken from the free list first: it holds no page, so nothing has to be evicted.
+  if (!free_list_.empty()) {
+    *frame_id = free_list_.front();
+    free_list_.pop_front();
+    return true;
+  }
 
-auto BufferPoolManagerInstance::FetchPgImp(page_id_t page_id) -> Page * { return nullptr; }
+  // No free frame left, ask the replacer for the frame with the largest backward k-distance.
+  if (!replacer_->Evict(frame_id)) {
+    // Every frame is pinned, the caller cannot be served.
+    return false;
+  }
+
+  Page *victim = &pages_[*frame_id];
+  page_id_t victim_id = victim->GetPageId();
+
+  // A dirty page holds the only up-to-date copy of its content, it must reach the disk before the frame is reused.
+  if (victim->IsDirty()) {
+    disk_manager_->WritePage(victim_id, victim->GetData());
+  }
+
+  // Drop every trace of the victim so that the frame looks like a brand new one.
+  page_table_->Remove(victim_id);
+  victim->ResetMemory();
+  victim->page_id_ = INVALID_PAGE_ID;
+  victim->pin_count_ = 0;
+  victim->is_dirty_ = false;
+
+  // Evict() already removed the victim's access history from the replacer.
+  return true;
+}
+
+auto BufferPoolManagerInstance::NewPgImp(page_id_t *page_id) -> Page * {
+  std::scoped_lock<std::mutex> lock(latch_);
+
+  frame_id_t frame_id;
+  if (!AcquireFrame(&frame_id)) {
+    // All frames are pinned, no page id was consumed and the caller sees nullptr.
+    return nullptr;
+  }
+
+  // The page id is allocated only once a frame is guaranteed, so a failure never burns an id.
+  page_id_t new_page_id = AllocatePage();
+  Page *page = &pages_[frame_id];
+  page->ResetMemory();
+  page->page_id_ = new_page_id;
+  page->pin_count_ = 1;
+  page->is_dirty_ = false;
+
+  page_table_->Insert(new_page_id, frame_id);
+  replacer_->RecordAccess(frame_id);
+  // The frame must not be evicted while the caller is still using it.
+  replacer_->SetEvictable(frame_id, false);
+
+  *page_id = new_page_id;
+  return page;
+}
+
+auto BufferPoolManagerInstance::FetchPgImp(page_id_t page_id) -> Page * {
+  if (page_id == INVALID_PAGE_ID) {
+    return nullptr;
+  }
+
+  std::scoped_lock<std::mutex> lock(latch_);
+
+  frame_id_t frame_id;
+  if (page_table_->Find(page_id, frame_id)) {
+    // Hit: the page is already resident, only its pin count and access history change.
+    Page *page = &pages_[frame_id];
+    page->pin_count_++;
+    replacer_->RecordAccess(frame_id);
+    replacer_->SetEvictable(frame_id, false);
+    return page;
+  }
+
+  // Miss: the page has to be brought in from the disk.
+  if (!AcquireFrame(&frame_id)) {
+    return nullptr;
+  }
+
+  Page *page = &pages_[frame_id];
+  page->ResetMemory();
+  disk_manager_->ReadPage(page_id, page->GetData());
+  page->page_id_ = page_id;
+  page->pin_count_ = 1;
+  page->is_dirty_ = false;
+
+  page_table_->Insert(page_id, frame_id);
+  replacer_->RecordAccess(frame_id);
+  replacer_->SetEvictable(frame_id, false);
+
+  return page;
+}
 
 auto BufferPoolManagerInstance::UnpinPgImp(page_id_t page_id, bool is_dirty) -> bool { return false; }
 
