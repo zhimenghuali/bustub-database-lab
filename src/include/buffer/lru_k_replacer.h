@@ -12,10 +12,8 @@
 
 #pragma once
 
-#include <limits>
-#include <list>
+#include <deque>
 #include <mutex>  // NOLINT
-#include <unordered_map>
 #include <vector>
 
 #include "common/config.h"
@@ -133,12 +131,19 @@ class LRUKReplacer {
   auto Size() -> size_t;
 
  private:
-  // TODO(student): implement me! You can replace these member variables as you like.
-  // Remove maybe_unused if you start using them.
-  [[maybe_unused]] size_t current_timestamp_{0};
-  [[maybe_unused]] size_t curr_size_{0};
-  [[maybe_unused]] size_t replacer_size_;
-  [[maybe_unused]] size_t k_;
+  struct FrameHistory {
+    std::deque<size_t> accesses_;
+    bool evictable_{false};
+  };
+
+  void ValidateFrame(frame_id_t frame_id) const;
+
+  size_t current_timestamp_{0};
+  size_t curr_size_{0};
+  size_t replacer_size_;
+  size_t k_;
+  std::vector<FrameHistory> frames_;
+  // 保护访问历史、逻辑时钟与可淘汰帧计数。
   std::mutex latch_;
 };
 
