@@ -69,12 +69,18 @@ auto ExtendibleHashTable<K, V>::GetNumBucketsInternal() const -> int {
 
 template <typename K, typename V>
 auto ExtendibleHashTable<K, V>::Find(const K &key, V &value) -> bool {
-  UNREACHABLE("not implemented");
+  // The directory may be doubled by a concurrent Insert, so the index must be resolved
+  // and the bucket probed while holding the table latch.
+  std::scoped_lock<std::mutex> lock(latch_);
+  return dir_[IndexOf(key)]->Find(key, value);
 }
 
 template <typename K, typename V>
 auto ExtendibleHashTable<K, V>::Remove(const K &key) -> bool {
-  UNREACHABLE("not implemented");
+  // Shrinking and merging are out of scope for this project: the bucket stays allocated
+  // and only the kv pair is dropped, so directory / bucket metadata is left unchanged.
+  std::scoped_lock<std::mutex> lock(latch_);
+  return dir_[IndexOf(key)]->Remove(key);
 }
 
 template <typename K, typename V>
@@ -90,17 +96,43 @@ ExtendibleHashTable<K, V>::Bucket::Bucket(size_t array_size, int depth) : size_(
 
 template <typename K, typename V>
 auto ExtendibleHashTable<K, V>::Bucket::Find(const K &key, V &value) -> bool {
-  UNREACHABLE("not implemented");
+  // Keep `value` untouched when the lookup misses, so callers can rely on the out-param
+  // only after a true return.
+  for (const auto &item : list_) {
+    if (item.first == key) {
+      value = item.second;
+      return true;
+    }
+  }
+  return false;
 }
 
 template <typename K, typename V>
 auto ExtendibleHashTable<K, V>::Bucket::Remove(const K &key) -> bool {
-  UNREACHABLE("not implemented");
+  for (auto iter = list_.begin(); iter != list_.end(); ++iter) {
+    if (iter->first == key) {
+      list_.erase(iter);
+      return true;
+    }
+  }
+  return false;
 }
 
 template <typename K, typename V>
 auto ExtendibleHashTable<K, V>::Bucket::Insert(const K &key, const V &value) -> bool {
-  UNREACHABLE("not implemented");
+  // An existing key is updated in place: it never grows the bucket, so it must succeed
+  // even when the bucket is already full.
+  for (auto &item : list_) {
+    if (item.first == key) {
+      item.second = value;
+      return true;
+    }
+  }
+  if (IsFull()) {
+    return false;
+  }
+  list_.emplace_back(key, value);
+  return true;
 }
 
 template class ExtendibleHashTable<page_id_t, Page *>;
