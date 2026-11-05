@@ -22,7 +22,11 @@
 namespace bustub {
 
 template <typename K, typename V>
-ExtendibleHashTable<K, V>::ExtendibleHashTable(size_t bucket_size) : bucket_size_(bucket_size) {}
+ExtendibleHashTable<K, V>::ExtendibleHashTable(size_t bucket_size) : bucket_size_(bucket_size) {
+  // An empty table still owns one bucket: the directory always has at least one valid entry,
+  // so that Find / Remove / IndexOf can dereference dir_[0] without extra checks.
+  dir_.push_back(std::make_shared<Bucket>(bucket_size, 0));
+}
 
 template <typename K, typename V>
 auto ExtendibleHashTable<K, V>::IndexOf(const K &key) -> size_t {
