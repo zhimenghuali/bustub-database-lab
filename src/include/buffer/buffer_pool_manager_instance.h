@@ -159,7 +159,7 @@ class BufferPoolManagerInstance : public BufferPoolManager {
   LRUKReplacer *replacer_;
   /** List of free frames that don't have any pages on them. */
   std::list<frame_id_t> free_list_;
-  /** This latch protects shared data structures. We recommend updating this comment to describe what it protects. */
+  /** 保护页元数据、空闲帧列表及页表和替换器之间的一致性；内部组件随后获取各自的锁。 */
   std::mutex latch_;
 
   /**
@@ -176,6 +176,9 @@ class BufferPoolManagerInstance : public BufferPoolManager {
     // This is a no-nop right now without a more complex data structure to track deallocated pages
   }
 
-  // TODO(student): You may add additional private members and helper functions
+ private:
+  // 下列辅助函数均要求调用者已持有 latch_，避免批量操作重复加锁。
+  auto AcquireFrame(frame_id_t *frame_id) -> bool;
+  void FlushFrame(frame_id_t frame_id);
 };
 }  // namespace bustub
