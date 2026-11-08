@@ -29,6 +29,7 @@ p1_files=(
 )
 regression_files=(
   test/container/hash/extendible_hash_table_regression_test.cpp
+  test/container/hash/extendible_hash_table_find_remove_test.cpp
   test/buffer/lru_k_replacer_regression_test.cpp
   test/buffer/buffer_pool_manager_regression_test.cpp
 )
@@ -55,7 +56,12 @@ run_step configure cmake -S "$source_dir" -B "$build_dir" -DCMAKE_BUILD_TYPE=Deb
   "-DCLANG_FORMAT_BIN=$P1_CLANG_FORMAT" "-DCLANG_TIDY_BIN=$P1_CLANG_TIDY"
 targets=(extendible_hash_table_test lru_k_replacer_test buffer_pool_manager_instance_test)
 if [[ "$mode" != package ]]; then
-  targets+=(extendible_hash_table_regression_test lru_k_replacer_regression_test buffer_pool_manager_regression_test)
+  targets+=(
+    extendible_hash_table_regression_test
+    extendible_hash_table_find_remove_test
+    lru_k_replacer_regression_test
+    buffer_pool_manager_regression_test
+  )
 fi
 run_step build cmake --build "$build_dir" --parallel 4 --target "${targets[@]}"
 # 各测试进程使用自己的工作目录，隔离测试数据库和日志文件。
