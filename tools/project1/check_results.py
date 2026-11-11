@@ -15,6 +15,7 @@ expected = {
 if mode != "package":
     expected.update({
         "extendible_hash_table_regression_test": 3,
+        "extendible_hash_table_find_remove_test": 11,
         "lru_k_replacer_regression_test": 6,
         "buffer_pool_manager_regression_test": 4,
     })

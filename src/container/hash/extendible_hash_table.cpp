@@ -72,12 +72,14 @@ auto ExtendibleHashTable<K, V>::GetNumBucketsInternal() const -> int {
 template <typename K, typename V>
 auto ExtendibleHashTable<K, V>::Find(const K &key, V &value) -> bool {
   std::scoped_lock<std::mutex> lock(latch_);
+  // 未命中时不写 value，调用方可以复用同一个输出参数做连续查找。
   return dir_[IndexOf(key)]->Find(key, value);
 }
 
 template <typename K, typename V>
 auto ExtendibleHashTable<K, V>::Remove(const K &key) -> bool {
   std::scoped_lock<std::mutex> lock(latch_);
+  // 只摘除键值对，不合并空桶、不回缩目录：任务说明明确不要求 shrink/combination。
   return dir_[IndexOf(key)]->Remove(key);
 }
 
@@ -134,6 +136,7 @@ ExtendibleHashTable<K, V>::Bucket::Bucket(size_t array_size, int depth) : size_(
 
 template <typename K, typename V>
 auto ExtendibleHashTable<K, V>::Bucket::Find(const K &key, V &value) -> bool {
+  // 桶内是无序链表，只能线性扫描；只有命中时才写回 value。
   for (const auto &item : list_) {
     if (item.first == key) {
       value = item.second;
@@ -145,6 +148,7 @@ auto ExtendibleHashTable<K, V>::Bucket::Find(const K &key, V &value) -> bool {
 
 template <typename K, typename V>
 auto ExtendibleHashTable<K, V>::Bucket::Remove(const K &key) -> bool {
+  // 桶内不允许重复键，因此最多命中一次，删除后立即返回。
   for (auto item = list_.begin(); item != list_.end(); ++item) {
     if (item->first == key) {
       list_.erase(item);
