@@ -128,7 +128,7 @@ class MockBufferPoolManager : public BufferPoolManagerInstance {
    */
   Page *FetchPgImp(page_id_t page_id) {
     counter.AddCount(FuncType::FetchPage);
-    return BufferPoolManager::FetchPgImp(page_id);
+   return BufferPoolManagerInstance::FetchPgImp(page_id);
   }
 
   /**
@@ -149,7 +149,7 @@ class MockBufferPoolManager : public BufferPoolManagerInstance {
    */
   bool FlushPgImp(page_id_t page_id) {
     counter.AddCount(FuncType::FlushPage);
-    return BufferPoolManager::FlushPgImp(page_id);
+    return BufferPoolManagerInstance::FlushPgImp(page_id);
   }
 
   /**
@@ -159,7 +159,7 @@ class MockBufferPoolManager : public BufferPoolManagerInstance {
    */
   Page *NewPgImp(page_id_t *page_id) {
     counter.AddCount(FuncType::NewPage);
-    return BufferPoolManager::NewPgImp(page_id);
+    return BufferPoolManagerInstance::NewPgImp(page_id);
   }
 
   /**
@@ -169,7 +169,7 @@ class MockBufferPoolManager : public BufferPoolManagerInstance {
    */
   bool DeletePgImp(page_id_t page_id) {
     counter.AddCount(FuncType::DeletePage);
-    return BufferPoolManager::DeletePgImp(page_id);
+    return BufferPoolManagerInstance::DeletePgImp(page_id);
   }
 
   /**
@@ -177,7 +177,7 @@ class MockBufferPoolManager : public BufferPoolManagerInstance {
    */
   void FlushAllPgsImp() {
     counter.AddCount(FuncType::FlushAllPages);
-    BufferPoolManager::FlushAllPgsImp();
+    BufferPoolManagerInstance::FlushAllPgsImp();
   }
 
   // For grading. Do not modify!
