@@ -128,7 +128,7 @@ class MockBufferPoolManager : public BufferPoolManagerInstance {
    */
   Page *FetchPgImp(page_id_t page_id) {
     counter.AddCount(FuncType::FetchPage);
-   return BufferPoolManagerInstance::FetchPgImp(page_id);
+    return BufferPoolManagerInstance::FetchPgImp(page_id);
   }
 
   /**
@@ -139,7 +139,7 @@ class MockBufferPoolManager : public BufferPoolManagerInstance {
    */
   bool UnpinPgImp(page_id_t page_id, bool is_dirty) {
     counter.AddCount(FuncType::UnpinPage);
-    return BufferPoolManager::UnpinPgImp(page_id, is_dirty);
+    return BufferPoolManagerInstance::UnpinPgImp(page_id, is_dirty);
   }
 
   /**
