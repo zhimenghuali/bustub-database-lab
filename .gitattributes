@@ -1,1 +1,2 @@
 *.slt text eol=lf
+tools/project1/* text eol=lf

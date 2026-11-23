@@ -29,11 +29,6 @@ BufferPoolManagerInstance::BufferPoolManagerInstance(size_t pool_size, DiskManag
   for (size_t i = 0; i < pool_size_; ++i) {
     free_list_.emplace_back(static_cast<int>(i));
   }
-
-  // TODO(students): remove this line after you have implemented the buffer pool manager
-  throw NotImplementedException(
-      "BufferPoolManager is not implemented yet. If you have finished implementing BPM, please remove the throw "
-      "exception line in `buffer_pool_manager_instance.cpp`.");
 }
 
 BufferPoolManagerInstance::~BufferPoolManagerInstance() {
@@ -42,9 +37,27 @@ BufferPoolManagerInstance::~BufferPoolManagerInstance() {
   delete replacer_;
 }
 
-auto BufferPoolManagerInstance::NewPgImp(page_id_t *page_id) -> Page * { return nullptr; }
+auto BufferPoolManagerInstance::AcquireFrame(frame_id_t *frame_id) -> bool {
+  if (!free_list_.empty()) {
+    *frame_id = free_list_.front();
+    free_list_.pop_front();
+  } else if (!replacer_->Evict(frame_id)) {
+    return false;
+  }
 
-auto BufferPoolManagerInstance::FetchPgImp(page_id_t page_id) -> Page * { return nullptr; }
+  auto &page = pages_[*frame_id];
+  if (page.page_id_ != INVALID_PAGE_ID) {
+    if (page.is_dirty_) {
+      FlushFrame(*frame_id);
+    }
+    page_table_->Remove(page.page_id_);
+  }
+  page.ResetMemory();
+  page.page_id_ = INVALID_PAGE_ID;
+  page.pin_count_ = 0;
+  page.is_dirty_ = false;
+  return true;
+}
 
 auto BufferPoolManagerInstance::UnpinPgImp(page_id_t page_id, bool is_dirty) -> bool {
   std::scoped_lock<std::mutex> lock(latch_);
@@ -97,16 +110,15 @@ auto BufferPoolManagerInstance::DeletePgImp(page_id_t page_id) -> bool {
   std::scoped_lock<std::mutex> lock(latch_);
   frame_id_t frame_id;
   if (!page_table_->Find(page_id, frame_id)) {
+    DeallocatePage(page_id);
     return true;
   }
-
   auto &page = pages_[frame_id];
   if (page.pin_count_ > 0) {
     return false;
   }
-
-  replacer_->Remove(frame_id);
   page_table_->Remove(page_id);
+  replacer_->Remove(frame_id);
   page.ResetMemory();
   page.page_id_ = INVALID_PAGE_ID;
   page.pin_count_ = 0;
