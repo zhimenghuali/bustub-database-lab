@@ -1,123 +1,98 @@
 {
   "date": "2026-11-23",
-  "tested_main_commit": "f5dee14e51945fab0e82aa51f6649473dc22ab4e",
-  "source_modified": false,
-  "pr13_merge_issue": {
-    "commit": "75fcb88298b1590b46bf0ba9d36cade2988e67ca",
-    "missing_definitions": [
-      "NewPgImp",
-      "FetchPgImp",
-      "FlushFrame"
-    ],
-    "build_exit_code": 2,
-    "resolved_by": "PR #14 revert; f5dee14"
+  "verified_at": "2026-11-23T18:10:04.919208+08:00",
+  "tested_main_commit": "b906f7a7d55a400c15c2327293386985ed4b8c4b",
+  "production_source_modified": false,
+  "f_reintegration": {
+    "pull_request": 15,
+    "merged": true,
+    "f_tests_in_main": true,
+    "f_test_count": 9
   },
-  "main_test_count": 53,
-  "supplementary_f_test_count": 9,
-  "default_build_passed": true,
+  "main_test_count": 62,
+  "official_test_count": 29,
+  "regression_test_count": 33,
   "asan_ubsan": {
-    "base_commit": "f5dee14e51945fab0e82aa51f6649473dc22ab4e",
-    "source_changed": false,
-    "sanitizers": [
-      "address",
-      "undefined"
-    ],
-    "builtin_tests": 53,
-    "supplementary_f_tests": 9,
-    "tests": 62,
+    "mode": "memory",
     "passed": true,
+    "tests": 62,
     "results": [
       {
         "target": "extendible_hash_table_test",
-        "exit_code": 0,
-        "supplementary": false,
         "tests": 12,
         "failures": 0,
         "errors": 0,
         "disabled": 0,
         "actual_run": 12,
-        "passed": true
+        "exit_code": 0
       },
       {
         "target": "lru_k_replacer_test",
-        "exit_code": 0,
-        "supplementary": false,
         "tests": 4,
         "failures": 0,
         "errors": 0,
         "disabled": 0,
         "actual_run": 4,
-        "passed": true
+        "exit_code": 0
       },
       {
         "target": "buffer_pool_manager_instance_test",
-        "exit_code": 0,
-        "supplementary": false,
         "tests": 13,
         "failures": 0,
         "errors": 0,
         "disabled": 0,
         "actual_run": 13,
-        "passed": true
+        "exit_code": 0
       },
       {
         "target": "extendible_hash_table_regression_test",
-        "exit_code": 0,
-        "supplementary": false,
         "tests": 3,
         "failures": 0,
         "errors": 0,
         "disabled": 0,
         "actual_run": 3,
-        "passed": true
+        "exit_code": 0
       },
       {
         "target": "extendible_hash_table_find_remove_test",
-        "exit_code": 0,
-        "supplementary": false,
         "tests": 11,
         "failures": 0,
         "errors": 0,
         "disabled": 0,
         "actual_run": 11,
-        "passed": true
+        "exit_code": 0
       },
       {
         "target": "lru_k_replacer_regression_test",
-        "exit_code": 0,
-        "supplementary": false,
         "tests": 6,
         "failures": 0,
         "errors": 0,
         "disabled": 0,
         "actual_run": 6,
-        "passed": true
+        "exit_code": 0
       },
       {
         "target": "buffer_pool_manager_regression_test",
-        "exit_code": 0,
-        "supplementary": false,
         "tests": 4,
         "failures": 0,
         "errors": 0,
         "disabled": 0,
         "actual_run": 4,
-        "passed": true
+        "exit_code": 0
       },
       {
-        "target": "f_supplementary_test",
-        "exit_code": 0,
-        "supplementary": true,
+        "target": "buffer_pool_manager_instance_f_test",
         "tests": 9,
         "failures": 0,
         "errors": 0,
         "disabled": 0,
         "actual_run": 9,
-        "passed": true
+        "exit_code": 0
       }
     ]
   },
   "tsan": {
+    "tested_main_commit": "b906f7a7d55a400c15c2327293386985ed4b8c4b",
     "exit_code": 0,
     "tests": 62,
     "failures": 0,
@@ -141,60 +116,124 @@
       {
         "file": "src/buffer/buffer_pool_manager_instance.cpp",
         "exit_code": 0
+      },
+      {
+        "file": "test/buffer/buffer_pool_manager_instance_f_test.cpp",
+        "exit_code": 0
       }
     ],
+    "full_header_analysis": false,
     "original_workflow_tracks_main": false
   },
   "package": {
-    "base_commit": "f5dee14e51945fab0e82aa51f6649473dc22ab4e",
-    "clean_baseline": "0adeb96",
+    "mode": "package",
     "passed": true,
     "tests": 29,
     "results": [
       {
         "target": "extendible_hash_table_test",
-        "exit_code": 0,
         "tests": 12,
         "failures": 0,
         "errors": 0,
         "disabled": 0,
         "actual_run": 12,
-        "passed": true
+        "exit_code": 0
       },
       {
         "target": "lru_k_replacer_test",
-        "exit_code": 0,
         "tests": 4,
         "failures": 0,
         "errors": 0,
         "disabled": 0,
         "actual_run": 4,
-        "passed": true
+        "exit_code": 0
       },
       {
         "target": "buffer_pool_manager_instance_test",
-        "exit_code": 0,
         "tests": 13,
         "failures": 0,
         "errors": 0,
         "disabled": 0,
         "actual_run": 13,
-        "passed": true
+        "exit_code": 0
       }
-    ]
+    ],
+    "tested_main_commit": "b906f7a7d55a400c15c2327293386985ed4b8c4b",
+    "clean_baseline": "0adeb96"
   },
   "manifest": {
-    "six_files_only": true,
-    "source_matches": true,
-    "source_sha256": {
+    "archive_sha256": "c3d4e2df37e86e95030976c4a27487e1101445a834a8d59b3bb8fa3a25593294",
+    "files": {
+      "src/buffer/buffer_pool_manager_instance.cpp": "d59232f144cb9e0009f0ec5c644bd1fc6698e05133a87d45bf34849eb114f3fa",
       "src/buffer/lru_k_replacer.cpp": "770fd66f438d008373e4e7f7991846fcf3fad74a73869165d7d024fbf11ad9fb",
-      "src/include/container/hash/extendible_hash_table.h": "4b78e4107ea2961d89ee66d116abfbb765520a3a672f8540ad0fe2716d07b8ec",
-      "src/include/buffer/buffer_pool_manager_instance.h": "11d693a510c76cb1317ddff2c8230e76eed819068258848d9d0feff238643ef4",
-      "src/buffer/buffer_pool_manager_instance.cpp": "a81db5406f7897b34f16233cf3fdec1e409aa0967f90d18ae9df17790cf798ab",
       "src/container/hash/extendible_hash_table.cpp": "48753bb0c900eec7bbff1b4f9c836c4e43e1bdbcf006b02b5e0e4a1202f002df",
-      "src/include/buffer/lru_k_replacer.h": "3a93402fde1e473db0f93c95491d0e33cd1cd15b25de2909435c4cb246b2f047"
+      "src/include/buffer/buffer_pool_manager_instance.h": "11d693a510c76cb1317ddff2c8230e76eed819068258848d9d0feff238643ef4",
+      "src/include/buffer/lru_k_replacer.h": "3a93402fde1e473db0f93c95491d0e33cd1cd15b25de2909435c4cb246b2f047",
+      "src/include/container/hash/extendible_hash_table.h": "4b78e4107ea2961d89ee66d116abfbb765520a3a672f8540ad0fe2716d07b8ec"
     },
-    "package_sha256": "fba52d40f3484b1302884306a8a62167c14594b7e793d33127ec9a745d962ca6"
+    "six_files_only": true,
+    "source_matches": true
   },
+  "verification_scripts": {
+    "normal_mode_test_count": 62,
+    "package_mode_test_count": 29,
+    "f_in_quality_file_list": true,
+    "bash_syntax_passed": true,
+    "result_checker_cases": [
+      {
+        "case": "target counting for debug",
+        "fixture_only": true,
+        "exit_code": 0,
+        "tests": 62
+      },
+      {
+        "case": "target counting for memory",
+        "fixture_only": true,
+        "exit_code": 0,
+        "tests": 62
+      },
+      {
+        "case": "target counting for thread",
+        "fixture_only": true,
+        "exit_code": 0,
+        "tests": 62
+      },
+      {
+        "case": "missing_f_step",
+        "rejected": true,
+        "exit_code": 1
+      },
+      {
+        "case": "missing_f_xml",
+        "rejected": true,
+        "exit_code": 1
+      },
+      {
+        "case": "wrong_f_count",
+        "rejected": true,
+        "exit_code": 1
+      },
+      {
+        "case": "failed_f_test",
+        "rejected": true,
+        "exit_code": 1
+      },
+      {
+        "case": "skipped_f_test",
+        "rejected": true,
+        "exit_code": 1
+      }
+    ],
+    "remote_slurm_rerun": false
+  },
+  "history": [
+    {
+      "tested_main_commit": "f5dee14e51945fab0e82aa51f6649473dc22ab4e",
+      "main_test_count": 53,
+      "supplementary_f_test_count": 9,
+      "report": "history/f5dee14_2026-11-23/project1_验收记录_2026-11-23.md",
+      "summary": "history/f5dee14_2026-11-23/project1_验收汇总_2026-11-23.json"
+    }
+  ],
   "course_submission_verified": false
 }

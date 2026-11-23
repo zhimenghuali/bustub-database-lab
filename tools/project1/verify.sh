@@ -32,6 +32,7 @@ regression_files=(
   test/container/hash/extendible_hash_table_find_remove_test.cpp
   test/buffer/lru_k_replacer_regression_test.cpp
   test/buffer/buffer_pool_manager_regression_test.cpp
+  test/buffer/buffer_pool_manager_instance_f_test.cpp
 )
 if [[ "$mode" == quality ]]; then
   run_step format "$P1_CLANG_FORMAT" --dry-run --Werror "${p1_files[@]}" "${regression_files[@]}"
@@ -61,6 +62,7 @@ if [[ "$mode" != package ]]; then
     extendible_hash_table_find_remove_test
     lru_k_replacer_regression_test
     buffer_pool_manager_regression_test
+    buffer_pool_manager_instance_f_test
   )
 fi
 run_step build cmake --build "$build_dir" --parallel 4 --target "${targets[@]}"

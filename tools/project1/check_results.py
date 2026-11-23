@@ -18,6 +18,7 @@ if mode != "package":
         "extendible_hash_table_find_remove_test": 11,
         "lru_k_replacer_regression_test": 6,
         "buffer_pool_manager_regression_test": 4,
+        "buffer_pool_manager_instance_f_test": 9,
     })
 with (root / "exit-codes.tsv").open() as stream:
     steps = list(csv.DictReader(stream, delimiter="\t"))

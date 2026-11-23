@@ -1,0 +1,200 @@
+{
+  "date": "2026-11-23",
+  "tested_main_commit": "f5dee14e51945fab0e82aa51f6649473dc22ab4e",
+  "source_modified": false,
+  "pr13_merge_issue": {
+    "commit": "75fcb88298b1590b46bf0ba9d36cade2988e67ca",
+    "missing_definitions": [
+      "NewPgImp",
+      "FetchPgImp",
+      "FlushFrame"
+    ],
+    "build_exit_code": 2,
+    "resolved_by": "PR #14 revert; f5dee14"
+  },
+  "main_test_count": 53,
+  "supplementary_f_test_count": 9,
+  "default_build_passed": true,
+  "asan_ubsan": {
+    "base_commit": "f5dee14e51945fab0e82aa51f6649473dc22ab4e",
+    "source_changed": false,
+    "sanitizers": [
+      "address",
+      "undefined"
+    ],
+    "builtin_tests": 53,
+    "supplementary_f_tests": 9,
+    "tests": 62,
+    "passed": true,
+    "results": [
+      {
+        "target": "extendible_hash_table_test",
+        "exit_code": 0,
+        "supplementary": false,
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "disabled": 0,
+        "actual_run": 12,
+        "passed": true
+      },
+      {
+        "target": "lru_k_replacer_test",
+        "exit_code": 0,
+        "supplementary": false,
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "disabled": 0,
+        "actual_run": 4,
+        "passed": true
+      },
+      {
+        "target": "buffer_pool_manager_instance_test",
+        "exit_code": 0,
+        "supplementary": false,
+        "tests": 13,
+        "failures": 0,
+        "errors": 0,
+        "disabled": 0,
+        "actual_run": 13,
+        "passed": true
+      },
+      {
+        "target": "extendible_hash_table_regression_test",
+        "exit_code": 0,
+        "supplementary": false,
+        "tests": 3,
+        "failures": 0,
+        "errors": 0,
+        "disabled": 0,
+        "actual_run": 3,
+        "passed": true
+      },
+      {
+        "target": "extendible_hash_table_find_remove_test",
+        "exit_code": 0,
+        "supplementary": false,
+        "tests": 11,
+        "failures": 0,
+        "errors": 0,
+        "disabled": 0,
+        "actual_run": 11,
+        "passed": true
+      },
+      {
+        "target": "lru_k_replacer_regression_test",
+        "exit_code": 0,
+        "supplementary": false,
+        "tests": 6,
+        "failures": 0,
+        "errors": 0,
+        "disabled": 0,
+        "actual_run": 6,
+        "passed": true
+      },
+      {
+        "target": "buffer_pool_manager_regression_test",
+        "exit_code": 0,
+        "supplementary": false,
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "disabled": 0,
+        "actual_run": 4,
+        "passed": true
+      },
+      {
+        "target": "f_supplementary_test",
+        "exit_code": 0,
+        "supplementary": true,
+        "tests": 9,
+        "failures": 0,
+        "errors": 0,
+        "disabled": 0,
+        "actual_run": 9,
+        "passed": true
+      }
+    ]
+  },
+  "tsan": {
+    "exit_code": 0,
+    "tests": 62,
+    "failures": 0,
+    "errors": 0,
+    "disabled": 0,
+    "actual_run": 62,
+    "passed": true
+  },
+  "quality": {
+    "format_lint_passed": true,
+    "original_tidy_valid": false,
+    "directed_checks": [
+      {
+        "file": "src/container/hash/extendible_hash_table.cpp",
+        "exit_code": 0
+      },
+      {
+        "file": "src/buffer/lru_k_replacer.cpp",
+        "exit_code": 0
+      },
+      {
+        "file": "src/buffer/buffer_pool_manager_instance.cpp",
+        "exit_code": 0
+      }
+    ],
+    "original_workflow_tracks_main": false
+  },
+  "package": {
+    "base_commit": "f5dee14e51945fab0e82aa51f6649473dc22ab4e",
+    "clean_baseline": "0adeb96",
+    "passed": true,
+    "tests": 29,
+    "results": [
+      {
+        "target": "extendible_hash_table_test",
+        "exit_code": 0,
+        "tests": 12,
+        "failures": 0,
+        "errors": 0,
+        "disabled": 0,
+        "actual_run": 12,
+        "passed": true
+      },
+      {
+        "target": "lru_k_replacer_test",
+        "exit_code": 0,
+        "tests": 4,
+        "failures": 0,
+        "errors": 0,
+        "disabled": 0,
+        "actual_run": 4,
+        "passed": true
+      },
+      {
+        "target": "buffer_pool_manager_instance_test",
+        "exit_code": 0,
+        "tests": 13,
+        "failures": 0,
+        "errors": 0,
+        "disabled": 0,
+        "actual_run": 13,
+        "passed": true
+      }
+    ]
+  },
+  "manifest": {
+    "six_files_only": true,
+    "source_matches": true,
+    "source_sha256": {
+      "src/buffer/lru_k_replacer.cpp": "770fd66f438d008373e4e7f7991846fcf3fad74a73869165d7d024fbf11ad9fb",
+      "src/include/container/hash/extendible_hash_table.h": "4b78e4107ea2961d89ee66d116abfbb765520a3a672f8540ad0fe2716d07b8ec",
+      "src/include/buffer/buffer_pool_manager_instance.h": "11d693a510c76cb1317ddff2c8230e76eed819068258848d9d0feff238643ef4",
+      "src/buffer/buffer_pool_manager_instance.cpp": "a81db5406f7897b34f16233cf3fdec1e409aa0967f90d18ae9df17790cf798ab",
+      "src/container/hash/extendible_hash_table.cpp": "48753bb0c900eec7bbff1b4f9c836c4e43e1bdbcf006b02b5e0e4a1202f002df",
+      "src/include/buffer/lru_k_replacer.h": "3a93402fde1e473db0f93c95491d0e33cd1cd15b25de2909435c4cb246b2f047"
+    },
+    "package_sha256": "fba52d40f3484b1302884306a8a62167c14594b7e793d33127ec9a745d962ca6"
+  },
+  "course_submission_verified": false
+}

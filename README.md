@@ -15,8 +15,8 @@
 ## 当前进度
 
 - P1 三个核心模块已在 `main` 完成。
-- 主干现有 **53 个测试**：29 个官方测试、24 个回归测试。F 分支另有 9 个测试，本次作为额外验证，总计 62 项。
-- 2026-11-23，PR #13 的合并曾遗漏 `NewPgImp`、`FetchPgImp` 和 `FlushFrame`；PR #14 已回退该合并并恢复主干实现。本次验收以更新后的 `f5dee14` 为准，见 [最新验收记录](docs/project1_验收记录_2026-11-23.md)。
+- 主干现有 **62 个测试**：29 个官方测试、24 个其他回归测试、9 个 F 模块测试。F 测试通过 PR #15 正式纳入主干。
+- 2026-11-23，PR #13 的合并曾遗漏 `NewPgImp`、`FetchPgImp` 和 `FlushFrame`；PR #14 回退该合并后，PR #15 仅重新加入 F 测试和删除顺序改进，完整保留主干实现。本次验收以 `b906f7a` 为准，见 [最新验收记录](docs/project1_验收记录_2026-11-23.md)。
 - P2 B+Tree、P3 执行器仍有未实现部分，P1 测试通过不代表整套课程实验已完成。
 
 ## 开发环境
@@ -69,10 +69,11 @@ cmake --build build --parallel 4 --target \
   extendible_hash_table_regression_test \
   extendible_hash_table_find_remove_test \
   lru_k_replacer_regression_test \
-  buffer_pool_manager_regression_test
+  buffer_pool_manager_regression_test \
+  buffer_pool_manager_instance_f_test
 ```
 
-运行主干全部 53 个 P1 测试：
+运行主干全部 62 个 P1 测试：
 
 ```bash
 ctest --test-dir build \
@@ -80,9 +81,13 @@ ctest --test-dir build \
   --output-on-failure
 ```
 
-F 的 `buffer_pool_manager_instance_f_test.cpp` 保留在 `p1-bpm-f` 分支，当前主干不包含该测试文件。本次在独立验证目录中用它补测主干实现，未将回退的 F 源码重新覆盖主干。
+F 测试已在主干，可以单独运行：
 
-不要用尚未实现的 P2/P3 测试来判断 P1 是否完成。`tools/project1/verify.sh` 是 Linux 远程验收脚本，现有计数检查覆盖主干的 53 个测试。
+```bash
+./build/test/buffer_pool_manager_instance_f_test
+```
+
+不要用尚未实现的 P2/P3 测试来判断 P1 是否完成。`tools/project1/verify.sh` 的 Debug、ASAN/UBSAN、TSan 阶段正式覆盖 62 个测试，格式/lint 的文件清单也包含 F 测试；提交包阶段仍只运行 29 个官方测试。
 
 ## 格式和检查
 
@@ -150,6 +155,7 @@ build/                本地构建产物，Git 忽略
 - [B 模块复核与测试记录](docs/B模块-可扩展哈希表-复核与测试记录.md)
 - [历史验收记录](docs/project1_验收记录.md)
 - [2026-11-23 重新验收记录](docs/project1_验收记录_2026-11-23.md)
+- [F 重合并前的历史快照记录](docs/history/f5dee14_2026-11-23/project1_验收记录_2026-11-23.md)
 - [LICENSE](LICENSE)
 
 BusTub 原始代码版权和许可证声明保留在源码及 LICENSE 中。
