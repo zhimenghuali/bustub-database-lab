@@ -151,8 +151,8 @@ auto BufferPoolManagerInstance::DeletePgImp(page_id_t page_id) -> bool {
   if (page.pin_count_ > 0) {
     return false;
   }
-  page_table_->Remove(page_id);
   replacer_->Remove(frame_id);
+  page_table_->Remove(page_id);
   page.ResetMemory();
   page.page_id_ = INVALID_PAGE_ID;
   page.pin_count_ = 0;
